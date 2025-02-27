@@ -23,3 +23,6 @@ The database is a CSV file containing bank transaction data with columns: id, cr
 | tag | A tag associated with the transaction. |
 | accountExternalId | The external identifier for the account. |
 | location | The location of the transaction. |
+
+### EDA (Exploratory Data Analysis)
+The EDA is done in the [notebooks](./notebooks/) directory.
