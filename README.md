@@ -107,3 +107,8 @@ The accountExternalId parameter is the external identifier for the account. It i
 The location parameter is the location of the transaction. It is a string data type. There are 3 unique values in the location column.
 
 ![location](./notebooks/location%20Types%20Count.png)
+
+
+## Recurring Identification Methodology
+
+The methodology for identifying recurring transactions is located in the [docs](./docs/) directory.
