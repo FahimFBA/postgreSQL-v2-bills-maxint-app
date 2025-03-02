@@ -132,30 +132,33 @@ This project processes bank transaction data to identify recurring bill payments
 
 ## Usage
 
-1. Process the raw CSV file and generate recurring transactions:
+1. Set up the database structure in Supabase:
+   - Log in to your Supabase project.
+   - Navigate to the SQL Editor.
+   - Copy the contents of the `scripts/create_recurring_transactions_view.sql` file.
+   - Paste the SQL into the SQL Editor and execute it.
+   
+   This will create the necessary table and view in your Supabase project.
+
+2. Process the raw CSV file and generate recurring transactions:
    ```
    python scripts/process_transactions.py
    ```
    This will create a new file `tasks/recurring_transactions.csv` with the identified recurring transactions.
 
-2. Upload the processed data to Supabase:
+3. Upload the processed data to Supabase:
    ```
    python scripts/upload_to_supabase.py
    ```
    This will upload the data from `tasks/recurring_transactions.csv` to your Supabase project.
 
-3. Create the PostgreSQL view in your Supabase project:
-   - Open the Supabase dashboard and navigate to the SQL Editor.
-   - Copy the contents of `scripts/create_recurring_transactions_view.sql` and run it in the SQL Editor.
+## SQL Execution Sequence
 
-## Setting up Supabase
+There is only one SQL file that needs to be executed:
 
-1. Log in to your Supabase project.
-2. Navigate to the SQL Editor.
-3. Copy the contents of the `scripts/create_recurring_transactions_view.sql` file.
-4. Paste the SQL into the SQL Editor and execute it.
+1. `scripts/create_recurring_transactions_view.sql`: This script creates the `recurring_transactions` table and the `recurring_transactions_view` view. It also grants the necessary permissions to the authenticated role.
 
-This will create the necessary table and view in your Supabase project.
+Execute this script in your Supabase SQL Editor before running the Python scripts to process and upload data.
 
 ## Viewing Results
 
@@ -171,9 +174,8 @@ This will display the recurring transactions with the following columns:
 - next_date: The predicted date for the next occurrence
 - last_date: The date of the last occurrence
 - first_date: The date of the first occurrence
-- description: The name or description of the transaction
-- next_date: The predicted date for the next bill payment
-- last_paid_date: The date the bill was last paid
+
+The view is ordered by the next_date in ascending order.
 
 ## Project Structure
 
