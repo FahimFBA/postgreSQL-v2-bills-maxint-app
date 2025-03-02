@@ -8,9 +8,11 @@ Based on the analysis of transaction patterns and data characteristics, the foll
 We implemented a weighted scoring system based on multiple factors:
 - Time interval regularity (weight: 0.3)
 - Amount consistency (weight: 0.25)
-- Description match (weight: 0.25)
+- Description match (weight: 0.25) (always 1 in the current implementation)
 - Transaction type match (weight: 0.1)
 - Category match (weight: 0.1)
+
+The system uses a threshold of 0.4 to identify recurring transactions, balancing between sensitivity and specificity.
 
 ### 2. Major Functions
 
@@ -35,10 +37,12 @@ This function predicts the next occurrence of a recurring transaction by:
 ### 3. Process Flow
 1. Load and preprocess the transaction data
 2. Group transactions by description
-3. Calculate scores for each group
-4. Filter recurring transactions based on score and frequency
+3. Calculate scores for each group, including detailed debugging information
+4. Filter recurring transactions based on score (> 0.4) and frequency (>= 2 occurrences)
 5. Predict the next occurrence date for each recurring transaction
-6. Generate a new CSV with identified recurring transactions
+6. Apply a maximum future date limit (10 years from current date) for predicted next dates
+7. Sort the recurring transactions by next predicted date
+8. Generate a new CSV with identified recurring transactions
 
 ## Challenges Addressed
 
@@ -56,6 +60,9 @@ This function predicts the next occurrence of a recurring transaction by:
 2. Incorporate machine learning models for improved pattern recognition.
 3. Develop a feedback mechanism to continuously improve the identification accuracy based on user input.
 4. Implement more granular category matching to improve accuracy in specific transaction types.
+5. Fine-tune the scoring weights and threshold based on real-world performance data.
+6. Enhance the debugging and logging capabilities for better transparency and troubleshooting.
+7. Implement adaptive time interval prediction for more accurate next date estimates.
 
 ## Validation Process
 

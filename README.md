@@ -228,12 +228,23 @@ If you encounter any issues during testing, double-check that you've correctly e
 - The `process_transactions.py` script uses a scoring system to identify recurring transactions based on:
   - Time interval regularity (weight: 0.3)
   - Amount consistency (weight: 0.25)
+  - Description match (weight: 0.25, always 1 in the current implementation)
   - Transaction type match (weight: 0.1)
   - Category match (weight: 0.1)
+- The system uses a threshold of 0.4 to identify recurring transactions, balancing between sensitivity and specificity.
+- The process flow includes:
+  1. Loading and preprocessing the transaction data
+  2. Grouping transactions by description
+  3. Calculating scores for each group, including detailed debugging information
+  4. Filtering recurring transactions based on score (> 0.4) and frequency (>= 2 occurrences)
+  5. Predicting the next occurrence date for each recurring transaction
+  6. Applying a maximum future date limit (10 years from current date) for predicted next dates
+  7. Sorting the recurring transactions by next predicted date
+  8. Generating a new CSV with identified recurring transactions
 - The `upload_to_supabase.py` script uses the Supabase Python client to upload the processed data to your Supabase project.
 - The PostgreSQL view `recurring_transactions_view` provides an efficient way to query the recurring transactions data.
 
-For more detailed information about the implementation, please refer to the `docs/implementation_details.md` file.
+For more detailed information about the implementation, including future improvements and validation processes, please refer to the `docs/implementation_details.md` file.
 
 ## Note
 
