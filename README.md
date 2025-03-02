@@ -177,6 +177,40 @@ This will display the recurring transactions with the following columns:
 
 The view is ordered by the next_date in ascending order.
 
+## Testing
+
+To verify that your setup is working correctly, you can run the following tests in your Supabase SQL Editor:
+
+1. Insert test data:
+
+```sql
+INSERT INTO recurring_transactions (amount, description, next_date, last_date, first_date)
+VALUES 
+(100.00, 'Test Subscription', '2023-04-01', '2023-03-01', '2023-01-01'),
+(50.50, 'Test Utility Bill', '2023-04-15', '2023-03-15', '2023-02-15');
+```
+
+2. Query the view to check the inserted data:
+
+```sql
+SELECT * FROM recurring_transactions_view;
+```
+
+You should see two rows in the result, one for each inserted transaction, with the columns as described in the "Viewing Results" section.
+
+3. To clean up after testing, you can run:
+
+```sql
+DELETE FROM recurring_transactions WHERE description LIKE 'Test%';
+```
+
+These tests will help you confirm that:
+- You can insert data into the recurring_transactions table.
+- The recurring_transactions_view is correctly set up and displaying data.
+- The view is ordering results by next_date as expected.
+
+If you encounter any issues during testing, double-check that you've correctly executed the SQL script to create the table and view, and that you have the necessary permissions.
+
 ## Project Structure
 
 - `docs/`: Contains project documentation
