@@ -8,21 +8,21 @@ The entire goals of this project is located in the [tasks](./tasks/) directory.
 ### Analysis of the Database
 The database is a CSV file containing bank transaction data with columns: id, createdAt, externalId, type, amount, date, description, category, counterParty, recurring, tag, accountExternalId, and location.
 
-| Parameter | Description |
-| --- | --- |
-| id | The unique identifier for the transaction. |
-| createdAt | The timestamp when the transaction was created. |
-| externalId | The external identifier for the transaction. |
-| type | The type of transaction (e.g., card_payment, digital_payment). |
-| amount | The amount of the transaction. |
-| date | The date of the transaction. |
-| description | The description of the transaction. |
-| category | The category of the transaction. |
-| counterParty | The counterparty involved in the transaction. |
-| recurring | A flag indicating whether the transaction is recurring. |
-| tag | A tag associated with the transaction. |
-| accountExternalId | The external identifier for the account. |
-| location | The location of the transaction. |
+| Parameter         | Description                                                    |
+| ----------------- | -------------------------------------------------------------- |
+| id                | The unique identifier for the transaction.                     |
+| createdAt         | The timestamp when the transaction was created.                |
+| externalId        | The external identifier for the transaction.                   |
+| type              | The type of transaction (e.g., card_payment, digital_payment). |
+| amount            | The amount of the transaction.                                 |
+| date              | The date of the transaction.                                   |
+| description       | The description of the transaction.                            |
+| category          | The category of the transaction.                               |
+| counterParty      | The counterparty involved in the transaction.                  |
+| recurring         | A flag indicating whether the transaction is recurring.        |
+| tag               | A tag associated with the transaction.                         |
+| accountExternalId | The external identifier for the account.                       |
+| location          | The location of the transaction.                               |
 
 ### EDA (Exploratory Data Analysis)
 The EDA is done in the [notebooks](./notebooks/) directory.
@@ -112,3 +112,93 @@ The location parameter is the location of the transaction. It is a string data t
 ## Recurring Identification Methodology
 
 The methodology for identifying recurring transactions is located in the [docs](./docs/) directory.
+
+## Solution
+
+This project processes bank transaction data to identify recurring bill payments and uploads the results to Supabase.
+
+## Setup
+
+1. Install the required dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
+
+2. Set up your Supabase credentials in the `.env` file:
+   ```
+   SUPABASE_URL=your_supabase_project_url
+   SUPABASE_KEY=your_supabase_api_key
+   ```
+
+## Usage
+
+1. Process the raw CSV file and generate recurring transactions:
+   ```
+   python scripts/process_transactions.py
+   ```
+   This will create a new file `tasks/recurring_transactions.csv` with the identified recurring transactions.
+
+2. Upload the processed data to Supabase:
+   ```
+   python scripts/upload_to_supabase.py
+   ```
+   This will upload the data from `tasks/recurring_transactions.csv` to your Supabase project.
+
+3. Create the PostgreSQL view in your Supabase project:
+   - Open the Supabase dashboard and navigate to the SQL Editor.
+   - Copy the contents of `scripts/create_recurring_transactions_view.sql` and run it in the SQL Editor.
+
+## Setting up Supabase
+
+1. Log in to your Supabase project.
+2. Navigate to the SQL Editor.
+3. Copy the contents of the `scripts/create_recurring_transactions_view.sql` file.
+4. Paste the SQL into the SQL Editor and execute it.
+
+This will create the necessary table and view in your Supabase project.
+
+## Viewing Results
+
+After setting up the table and view, and uploading data, you can query the view in your Supabase project using:
+
+```sql
+SELECT * FROM recurring_transactions_view;
+```
+
+This will display the recurring transactions with the following columns:
+- amount: The amount due for the bill
+- description: The description of the transaction
+- next_date: The predicted date for the next occurrence
+- last_date: The date of the last occurrence
+- first_date: The date of the first occurrence
+- description: The name or description of the transaction
+- next_date: The predicted date for the next bill payment
+- last_paid_date: The date the bill was last paid
+
+## Project Structure
+
+- `docs/`: Contains project documentation
+  - `recurring_identification_methodology.md`: Describes the methodology for identifying recurring transactions
+  - `implementation_details.md`: Provides details on the implementation of the recurring transaction identification
+- `notebooks/`: Contains Jupyter notebooks for exploratory data analysis
+- `scripts/`: Contains Python scripts for processing and uploading data
+  - `process_transactions.py`: Identifies recurring transactions from raw data
+  - `upload_to_supabase.py`: Uploads processed data to Supabase
+  - `create_recurring_transactions_view.sql`: SQL script to create the view in Supabase
+- `tasks/`: Contains the raw transaction data and project goals
+
+## Implementation Details
+
+- The `process_transactions.py` script uses a scoring system to identify recurring transactions based on:
+  - Time interval regularity (weight: 0.3)
+  - Amount consistency (weight: 0.25)
+  - Transaction type match (weight: 0.1)
+  - Category match (weight: 0.1)
+- The `upload_to_supabase.py` script uses the Supabase Python client to upload the processed data to your Supabase project.
+- The PostgreSQL view `recurring_transactions_view` provides an efficient way to query the recurring transactions data.
+
+For more detailed information about the implementation, please refer to the `docs/implementation_details.md` file.
+
+## Note
+
+Make sure to handle your Supabase credentials securely and not share them publicly.
